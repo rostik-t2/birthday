@@ -1,0 +1,33 @@
+<div *ngIf="angularFireAuth.user | async as user; else showLogin">
+  <div class="p-5 welcome-text" *ngIf="!user.displayName">
+    <div *ngIf="!user.displayName" class="p-5 center-form">
+      <p class="h4 mb-4">Как к вам обращаться?</p>
+      <input type="text" [formControl]="displayName" novalidate class="form-control mb-4" placeholder="Введите имя">
+
+      <button (click)="setDisplayName(user, displayName.value)" class="btn btn-info btn-block my-4" type="submit">Продолжить</button>
+    </div>
+  </div>
+</div>
+<ng-template #showLogin>
+
+  <!-- Default form login -->
+  <form [formGroup]="authForm" class="text-center p-5 center-form">
+
+    <p class="h4 mb-4">Введите e-mail и пароль для продолжения</p>
+
+    <!-- Email -->
+    <input type="email" formControlName="email" class="form-control mb-4" placeholder="E-mail">
+
+    <!-- Password -->
+    <input type="password" formControlName="password" class="form-control mb-4" placeholder="Пароль">
+    <div class="create-password">Впервые здесь? Придумайте пароль</div>
+
+    <!-- Sign in button -->
+    <button (click)="login()" class="btn btn-info btn-block my-4" type="submit">Продолжить</button>
+
+    <div>{{errorMessage}}</div>
+
+  </form>
+
+
+</ng-template>

@@ -1,0 +1,98 @@
+<div class="logout" (click)="logout()">Выйти</div>
+<div class="title">Голосуй за подарок</div>
+<div class="container">
+  <div class="gift-wrap row">
+    <div class="gift col-sm"
+         *ngFor="let gift of gifts; index as i" (mouseenter)="onHover(gift)" (mouseleave)="onUnhover(gift)"
+         (click)="basicModal.show(); giftChosen = gift.id">
+      <div class="gift__title">{{gift.title}}</div>
+      <div class="gift__image"><img [src]="gift.image"></div>
+      <div class="gift__price">Стоимость: {{gift.price}} рублей</div>
+      <div class="gift__amount">Собрано: {{gift.amount}} рублей</div>
+      <div class="gift__gif" *ngIf="gifts[1-i].hovered"><img [src]="gift.gif"></div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <ngb-alert [dismissible]="false" *ngIf="showAlert" type="success">Текст скопирован в буфер обмена</ngb-alert>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title w-100" id="myModalLabel">Спасибо за выбор!</h4>
+      </div>
+      <div class="modal-body p-4">
+        <!--<input type="number" [formControl]="amount" novalidate class="form-control mb-4"> рублей-->
+        <div *ngIf="myDonation > 0" class="md-form mb-5" @ngIfAnimation>
+          <p class="h5 mb-4">Вы уже внесли {{myDonation}} ₽</p>
+        </div>
+        <div class="md-form mb-5 modal__form">
+
+          <i class="fa fa-rub prefix grey-text modal__rub-icon"></i>
+          <input type="number" id="form32" class="form-control modal__form_input" mdbInputDirective
+                 [validateSuccess]="false" data-error="Меньше 100 рублей не принимаем :)" [formControl]="amount">
+          <label for="form32">Сколько вы готовы внести?</label>
+        </div>
+        <div *ngIf="amount.value && amount.valid && !paymentChosen" class="md-form mb-5" @ngIfAnimation>
+          <p class="h5 mb-4">Хотите сделать перевод прямо сейчас?</p>
+          <button mdbBtn type="button" color="primary" class="waves-light" mdbWavesEffect
+                  (click)="paymentChosen = PaymentType.CARD">Да
+          </button>
+          <button mdbBtn type="button" color="secondary" class="waves-light" mdbWavesEffect
+                  (click)="paymentChosen = PaymentType.CASH">Нет
+          </button>
+        </div>
+        <div *ngIf="paymentChosen && paymentChosen == PaymentType.CASH" class="md-form mb-5" @ngIfAnimation>
+          <p class="h5 mb-4">Спасибо, буду ждать от вас конвертик :)</p>
+          <button mdbBtn type="button" color="primary" class="waves-light" mdbWavesEffect
+                  (click)="registerPayment(amount.value)">Завершить
+          </button>
+        </div>
+        <div *ngIf="paymentChosen && paymentChosen == PaymentType.CARD" class="md-form mb-5" @ngIfAnimation>
+          <p class="h5 mb-4 modal__card-number-instruction">Скопируйте номер моей кары и введите его на форме по ссылке</p>
+          Номер карты:
+          <span class="modal__card-number-wrapper">
+            <span class="modal__card-number" id="cardNumber">5486732054326525</span>
+            <i class="fa fa-copy modal__copy" aria-hidden="true" mdbTooltip="Копировать" placement="top"
+             (click)="copyToClipboard()"></i>
+          </span>
+          <button mdbBtn type="button" color="primary" class="waves-light" mdbWavesEffect
+                  (click)="openAlfaportal(amount.value)">Сделать перевод
+          </button>
+          <div class="modal__form_small-text">*Мелкий шрифт: здесь могла бы быть форма оплаты, но для этого придется
+            отдавать 5-7% с каждого перевода, поэтому я решил сразу направить вас на страничку, где комиссия не
+            взимается
+          </div>
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button mdbBtn type="button" color="default" outline="true" aria-label="Close"
+                (click)="closeModal()" mdbWavesEffect>Отменить выбор
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #cardNumberModal="mdbModal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myBasicModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-4">
+        <div class="md-form mb-5">
+          <p class="h5 mb-4">Номер карты скопирован в буфер обмена.</p>
+          На всякий случай: <span>5486732054326525</span>
+        </div>
+      </div>
+      <div class="modal-footer modal-center-footer">
+        <button mdbBtn type="button" color="default" outline="true" aria-label="Close"
+                (click)="cardNumberModal.hide()" mdbWavesEffect>Закрыть окно
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,24 +13,6 @@ import { map, debounceTime } from 'rxjs/operators';
   templateUrl: './gifts.component.html',
   styleUrls: ['./gifts.component.scss'],
   animations: [
-    // trigger('ngIfAnimation', [
-    //   transition('void => *', [
-    //     //query('*', style({ opacity: 0, background: 'blue' }), {optional: true}),
-    //     query('*', stagger('300ms', [
-    //       animate('0.8s ease-in', keyframes([
-    //         style({opacity: 0}),
-    //         style({opacity: 1}),
-    //       ]))]), {optional: true}),
-    //   ]),
-    //   // transition('* => void', [
-    //   //   //query('*', style({ opacity: 1, background: 'red' }), {optional: true}),
-    //   //   query('*', stagger('300ms', [
-    //   //     animate('0.8s ease-in', keyframes([
-    //   //       style({opacity: 1}),
-    //   //       style({opacity: 0}),
-    //   //     ]))]), {optional: true}),
-    //   // ])
-    // ])
     trigger('ngIfAnimation', [
       state('void', style({
         opacity: 0
@@ -39,14 +21,13 @@ import { map, debounceTime } from 'rxjs/operators';
         opacity: 1
       })),
       transition('void => *', animate('0.5s ease-in')),
-      //transition('active => inactive', animate('100ms ease-out'))
     ])
   ]
 })
 export class GiftsComponent implements OnInit {
 
-  @ViewChild('basicModal') private basicModal;
-  @ViewChild('cardNumberModal') private cardNumberModal;
+  @ViewChild('basicModal', { static: false }) private basicModal;
+  // @ViewChild('cardNumberModal', { static: false }) private cardNumberModal;
   private user: User = null;
   public gifts: IGift[] = [
     {
@@ -56,18 +37,19 @@ export class GiftsComponent implements OnInit {
       price: 70000,
       amount: 0,
       description: '',
-      gif:  '/assets/please2.gif',
-      hovered: false
-    }, {
-      id: 2,
-      title: 'Телефон',
-      image: '/assets/s9t.gif',
-      price: 45000,
-      amount: 0,
-      description: '',
-      gif:  '/assets/please6.gif',
+      gif:  '/assets/happy.gif',
       hovered: false
     }
+    // , {
+    //   id: 2,
+    //   title: 'Телефон',
+    //   image: '/assets/s9t.gif',
+    //   price: 45000,
+    //   amount: 0,
+    //   description: '',
+    //   gif:  '/assets/please6.gif',
+    //   hovered: false
+    // }
   ];
   public myDonation: number = 0;
 
@@ -95,7 +77,10 @@ export class GiftsComponent implements OnInit {
       this.gifts.forEach(el => el.amount = 0);
       this.myDonation = 0;
       items.forEach((donation: IDonation) => {
-        this.gifts.find(el => el.id === donation.giftId).amount += donation.amount;
+        const currentGift = this.gifts.find(el => el.id === donation.giftId);
+        if (currentGift) {
+          currentGift.amount += donation.amount;
+        }
         if (donation.authorEmail === this.user.email) {
           this.myDonation += donation.amount;
         }
@@ -141,10 +126,10 @@ export class GiftsComponent implements OnInit {
     this.giftChosen = null;
   }
   public openAlfaportal(amount: number) {
-    this.copyToClipboard();
-    window.open('https://www.alfaportal.ru/card2card/ptpl/alfaportal/initial.html', '_blank').focus();
+    // this.copyToClipboard();
+    window.open('https://money.alfabank.ru/p2p/web/transfer/rterekhov5727', '_blank').focus();
     this.registerPayment(amount);
-    this.cardNumberModal.show();
+    // this.cardNumberModal.show();
   }
 
   public copyToClipboard() {

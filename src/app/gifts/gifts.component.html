@@ -1,5 +1,7 @@
 <div class="logout" (click)="logout()">Выйти</div>
-<div class="title">Голосуй за подарок</div>
+<div class="title">Привет! Мне уже давно нужен новый компьютер, моему старому уже больше 9 лет! Поэтому если вы размышляете на тему "что подарить", то можете внести свой вклад - небольшую финансовую помощь, которую я клятвенно обещаю потратить именно на приобретение копьютера</div>
+<div class="caption">В прошлом году здесь можно было сделать выбор: компьютер или телефон. На телефон накопить удалось, а вот компьютер продолжил ждать своего часа. Надеюсь, в этом году ему (и мне) повезет :)</div>
+
 <div class="container">
   <div class="gift-wrap row">
     <div class="gift col-sm"
@@ -9,7 +11,7 @@
       <div class="gift__image"><img [src]="gift.image"></div>
       <div class="gift__price">Стоимость: {{gift.price}} рублей</div>
       <div class="gift__amount">Собрано: {{gift.amount}} рублей</div>
-      <div class="gift__gif" *ngIf="gifts[1-i].hovered"><img [src]="gift.gif"></div>
+      <div class="gift__gif" *ngIf="gift.hovered"><img [src]="gift.gif"></div>
     </div>
   </div>
 </div>
@@ -50,13 +52,13 @@
           </button>
         </div>
         <div *ngIf="paymentChosen && paymentChosen == PaymentType.CARD" class="md-form mb-5" @ngIfAnimation>
-          <p class="h5 mb-4 modal__card-number-instruction">Скопируйте номер моей кары и введите его на форме по ссылке</p>
-          Номер карты:
-          <span class="modal__card-number-wrapper">
-            <span class="modal__card-number" id="cardNumber">5486732054326525</span>
-            <i class="fa fa-copy modal__copy" aria-hidden="true" mdbTooltip="Копировать" placement="top"
-             (click)="copyToClipboard()"></i>
-          </span>
+          <!--<p class="h5 mb-4 modal__card-number-instruction">Скопируйте номер моей кары и введите его на форме по ссылке</p>-->
+          <!--Номер карты:-->
+          <!--<span class="modal__card-number-wrapper">-->
+            <!--<span class="modal__card-number" id="cardNumber">5486732054326525</span>-->
+            <!--<i class="fa fa-copy modal__copy" aria-hidden="true" mdbTooltip="Копировать" placement="top"-->
+             <!--(click)="copyToClipboard()"></i>-->
+          <!--</span>-->
           <button mdbBtn type="button" color="primary" class="waves-light" mdbWavesEffect
                   (click)="openAlfaportal(amount.value)">Сделать перевод
           </button>
@@ -77,22 +79,22 @@
   </div>
 </div>
 
-<div mdbModal #cardNumberModal="mdbModal" class="modal fade" tabindex="-1" role="dialog"
-     aria-labelledby="myBasicModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-body p-4">
-        <div class="md-form mb-5">
-          <p class="h5 mb-4">Номер карты скопирован в буфер обмена.</p>
-          На всякий случай: <span>5486732054326525</span>
-        </div>
-      </div>
-      <div class="modal-footer modal-center-footer">
-        <button mdbBtn type="button" color="default" outline="true" aria-label="Close"
-                (click)="cardNumberModal.hide()" mdbWavesEffect>Закрыть окно
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<!--<div mdbModal #cardNumberModal="mdbModal" class="modal fade" tabindex="-1" role="dialog"-->
+     <!--aria-labelledby="myBasicModalLabel"-->
+     <!--aria-hidden="true">-->
+  <!--<div class="modal-dialog" role="document">-->
+    <!--<div class="modal-content">-->
+      <!--<div class="modal-body p-4">-->
+        <!--<div class="md-form mb-5">-->
+          <!--<p class="h5 mb-4">Номер карты скопирован в буфер обмена.</p>-->
+          <!--На всякий случай: <span>5486732054326525</span>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="modal-footer modal-center-footer">-->
+        <!--<button mdbBtn type="button" color="default" outline="true" aria-label="Close"-->
+                <!--(click)="cardNumberModal.hide()" mdbWavesEffect>Закрыть окно-->
+        <!--</button>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->

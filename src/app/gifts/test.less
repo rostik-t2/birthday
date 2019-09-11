@@ -1,0 +1,40 @@
+background-color: #FFF;
+.container {
+  padding: 45px 0 60px;
+  text-align: center;
+  .content {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    font-family: Comfortaa, sans-serif;
+    font-size: 24px;
+    .wrapper {
+      display: flex;
+      .child {
+        flex: 1;
+        cursor: pointer;
+        transition: 1s;
+        &:hover {
+          background: #ddd;
+        }
+      }
+      img {
+        max-height: 400px;
+      }
+      .text {
+        @media only screen and (max-width: 400px)  {
+          font-size: 14px;
+        }
+      }
+    }
+    .no-choice {
+      cursor: pointer;
+      transition: 1s;
+      padding: 16px;
+
+      &:hover {
+        background: #ddd;
+      }
+    }
+  }
+}

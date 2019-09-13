@@ -124,6 +124,7 @@ export class GiftsComponent implements OnInit {
     this.basicModal.hide();
     this.paymentChosen = null;
     this.giftChosen = null;
+    this.amount.reset();
   }
   public openAlfaportal(amount: number) {
     // this.copyToClipboard();

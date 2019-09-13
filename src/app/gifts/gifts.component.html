@@ -1,13 +1,11 @@
 <div class="logout" (click)="logout()">Выйти</div>
 <div class="title">Привет! Мне уже давно нужен новый компьютер, моему старому уже больше 9 лет! Поэтому если вы размышляете на тему "что подарить", то можете внести свой вклад - небольшую финансовую помощь, которую я клятвенно обещаю потратить именно на приобретение копьютера</div>
-<div class="caption">В прошлом году здесь можно было сделать выбор: компьютер или телефон. На телефон накопить удалось, а вот компьютер продолжил ждать своего часа. Надеюсь, в этом году ему (и мне) повезет :)</div>
 
 <div class="container">
   <div class="gift-wrap row">
     <div class="gift col-sm"
          *ngFor="let gift of gifts; index as i" (mouseenter)="onHover(gift)" (mouseleave)="onUnhover(gift)"
          (click)="basicModal.show(); giftChosen = gift.id">
-      <div class="gift__title">{{gift.title}}</div>
       <div class="gift__image"><img [src]="gift.image"></div>
       <div class="gift__price">Стоимость: {{gift.price}} рублей</div>
       <div class="gift__amount">Собрано: {{gift.amount}} рублей</div>
@@ -15,6 +13,8 @@
     </div>
   </div>
 </div>
+<div class="caption">В прошлом году здесь можно было сделать выбор: компьютер или телефон. На телефон накопить удалось, а вот компьютер продолжил ждать своего часа. Надеюсь, в этом году ему (и мне) повезет :)</div>
+
 
 <div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
      aria-hidden="true">

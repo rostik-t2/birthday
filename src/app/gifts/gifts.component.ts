@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {AngularFirestore, AngularFirestoreCollection} from "angularfire2/firestore";
 import {Observable, Subject} from "rxjs/index";
 import { map, debounceTime } from 'rxjs/operators';
+import {AuthService, IAuthInfo} from "../auth.service";
 
 @Component({
   selector: 'app-gifts',
@@ -28,28 +29,39 @@ export class GiftsComponent implements OnInit {
 
   @ViewChild('basicModal', { static: false }) private basicModal;
   // @ViewChild('cardNumberModal', { static: false }) private cardNumberModal;
-  private user: User = null;
   public gifts: IGift[] = [
     {
       id: 1,
-      title: 'Компьютер',
-      image: '/assets/comp-t.gif',
-      price: 70000,
+      title: 'Велосипед',
+      image: '/assets/bicycle.png',
+      price: 11500,
       amount: 0,
       description: '',
       gif:  '/assets/happy.gif',
-      hovered: false
+      hovered: false,
+      acceptedText: 'Ух ты! Я как раз мечтала о таком! Теперь буду самой быстрой в парке!!!'
     }
-    // , {
-    //   id: 2,
-    //   title: 'Телефон',
-    //   image: '/assets/s9t.gif',
-    //   price: 45000,
-    //   amount: 0,
-    //   description: '',
-    //   gif:  '/assets/please6.gif',
-    //   hovered: false
-    // }
+    , {
+      id: 2,
+      title: 'Автокресло',
+      image: '/assets/autokreslo.png',
+      price: 16000,
+      amount: 0,
+      description: '',
+      gif:  '/assets/please6.gif',
+      hovered: false,
+      acceptedText: 'Вот здорово! Новое удобное кресло! Теперь я готова с мамой и папой хоть в Африку на машине!'
+    }    , {
+      id: 3,
+      title: 'Мед. страховка',
+      image: '/assets/strahovka.jpg',
+      price: 147000,
+      amount: 0,
+      description: '',
+      gif:  '/assets/please6.gif',
+      hovered: false,
+      acceptedText: 'Ой, вы знаете, я вообще не очень люблю ходить в поликлинику, но родители говорят, что это очень важно и так я всегда буду здоровой! А я хочу быть здоровой, правда-правда :)'
+    }
   ];
   public myDonation: number = 0;
 
@@ -57,19 +69,29 @@ export class GiftsComponent implements OnInit {
 
   public paymentChosen: PaymentType = null;
   public readonly PaymentType: typeof PaymentType = PaymentType;
-  public giftChosen: number = null;
+  public giftChosen: IGift = null;
   public showAlert: boolean = false;
   private itemsCollection: AngularFirestoreCollection<IDonation>;
   public items: Observable<IDonation[]>;
+  public authorName: string = '';
+  public authorSurname: string = '';
+  public choiceConfirmed: any = null;
 
   constructor(private angularFireAuth: AngularFireAuth, private dbStore: AngularFirestore, private router: Router) {
-    this.angularFireAuth.user.subscribe((user: User) => {
-      if (user && user.displayName) {
-        this.user = user;
-      } else {
-        this.router.navigate(['/auth']);
-      }
-    });
+    if (AuthService.getAuthInfo()) {
+      const authInfo: IAuthInfo = AuthService.getAuthInfo();
+      this.authorName = authInfo.name;
+      this.authorSurname = authInfo.surname;
+    } else {
+      this.router.navigate(['/auth']);
+    }
+    // this.angularFireAuth.user.subscribe((user: User) => {
+    //   if (user && user.displayName) {
+    //     this.user = user;
+    //   } else {
+    //     this.router.navigate(['/auth']);
+    //   }
+    // });
     this.itemsCollection = this.dbStore.collection<IDonation>('donations');
     this.itemsCollection.snapshotChanges().pipe(
       map(actions => actions.map(a => a.payload.doc.data() as IDonation)),
@@ -81,7 +103,7 @@ export class GiftsComponent implements OnInit {
         if (currentGift) {
           currentGift.amount += donation.amount;
         }
-        if (donation.authorEmail === this.user.email) {
+        if (donation.authorSurname === this.authorSurname && donation.authorName === this.authorName) {
           this.myDonation += donation.amount;
         }
       })
@@ -106,30 +128,43 @@ export class GiftsComponent implements OnInit {
     gift.hovered = false;
   }
 
+  public confirmChoice(amount: number) {
+    this.registerPayment(amount);
+  }
+
+  public removeChoice() {
+    if (this.choiceConfirmed) {
+      this.choiceConfirmed.delete().then(() => {
+        this.choiceConfirmed = null;
+      });
+    }
+  }
+
   public registerPayment(amount: number): void {
     const donation: IDonation = {
       amount: amount,
       paymentType: this.paymentChosen,
-      authorName: this.user.displayName,
-      authorEmail: this.user.email,
+      authorName: this.authorName,
+      authorSurname: this.authorSurname,
       dateTime: new Date(),
-      giftId: this.giftChosen
+      giftId: this.giftChosen.id
     };
 
-    this.itemsCollection.add(donation);
-    this.closeModal();
+    this.itemsCollection.add(donation).then((doc) => {
+      this.choiceConfirmed = doc;
+    });
   }
 
   public closeModal() {
     this.basicModal.hide();
     this.paymentChosen = null;
     this.giftChosen = null;
+    this.choiceConfirmed = null;
     this.amount.reset();
   }
   public openAlfaportal(amount: number) {
     // this.copyToClipboard();
     window.open('https://money.alfabank.ru/p2p/web/transfer/rterekhov5727', '_blank').focus();
-    this.registerPayment(amount);
     // this.cardNumberModal.show();
   }
 
@@ -153,7 +188,7 @@ export class GiftsComponent implements OnInit {
   }
 
   public logout() {
-    this.angularFireAuth.auth.signOut();
+    AuthService.clearAuthInfo();
     this.router.navigate(['/auth']);
   }
 
@@ -168,13 +203,14 @@ interface IGift {
   description: string;
   gif?: string;
   hovered: boolean;
+  acceptedText: string;
 }
 
 interface IDonation {
   amount: number;
   paymentType: PaymentType;
   authorName: string;
-  authorEmail: string;
+  authorSurname: string;
   dateTime: Date;
   giftId: number;
 }

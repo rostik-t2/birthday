@@ -26,10 +26,10 @@ const appRoutes: Routes = [
   //   component: UploadGiftComponent,
   // },
   { path: '',
-    redirectTo: '/auth',
+    redirectTo: '/gifts',
     pathMatch: 'full'
   },
-  { path: '**', redirectTo: '/auth' }
+  { path: '**', redirectTo: '/gifts' }
 ];
 
 @NgModule({

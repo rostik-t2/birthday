@@ -3,6 +3,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { auth, User } from 'firebase';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import {AuthService} from "../auth.service";
 
 @Component({
   selector: 'kpi-auth',
@@ -10,68 +11,36 @@ import { Router } from '@angular/router';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent {
-  public errorMessage: string = '';
   public authForm: FormGroup;
   public displayName: FormControl = new FormControl('');
-  constructor(public angularFireAuth: AngularFireAuth, private router: Router) {
-    this.angularFireAuth.auth.useDeviceLanguage();
-    this.angularFireAuth.user.subscribe((user: User) => {
-      if (user && user.displayName) {
-        this.navigateToGiftsList();
-      }
-    });
+  public errorMessage = '';
+  constructor(private router: Router) {
+    if (AuthService.getAuthInfo()) {
+      this.router.navigate(['/gifts']);
+    }
 
     this.authForm = new FormGroup({
-      email: new FormControl(''),
-      password: new FormControl(''),
+      name: new FormControl(''),
+      surname: new FormControl(''),
     });
 
   }
   login() {
     this.errorMessage = '';
-    let email = this.authForm.get('email').value;
-    let password = this.authForm.get('password').value;
-    this.angularFireAuth.auth.signInWithEmailAndPassword(email, password)
-      .catch((error) => {
-        // Handle Errors here.
-        var errorCode = error.code;
-        if (errorCode == 'auth/wrong-password') {
-          this.errorMessage = 'Введен неверный пароль. Повторите попытку.';
-        } else if (errorCode == 'auth/user-not-found') {
-          this.angularFireAuth.auth.createUserWithEmailAndPassword(email, password)
-            .catch((error) => {
-              // Handle Errors here.
-              var errorCode = error.code;
-              var errorMessage = error.message;
-              if (errorCode == 'auth/weak-password') {
-                this.errorMessage = 'Придумайте более надежный пароль';
-              } else {
-                this.errorMessage = 'Упсс.. Что-то пошло не так. Повторите попытку, пожалуйста';
-              }
-              console.log(error);
-            });
-        } else if (errorCode == 'auth/invalid-email') {
-          this.errorMessage = 'Неправильный email. Исправьте ошибку и повторите';
-        } else {
-          this.errorMessage = 'Упсс.. Что-то пошло не так. Повторите попытку, пожалуйста';
-        }
-        console.log(error);
-      });
-  }
-
-  setDisplayName(user, displayName) {
-    // Updates the user attributes:
-    user.updateProfile({
-      displayName: displayName
-    }).then(() => {
+    let name = this.authForm.get('name').value;
+    let surname = this.authForm.get('surname').value;
+    if (name && surname) {
+      AuthService.setAuthInfo(name, surname);
       this.navigateToGiftsList();
-    }, function(error) {
-      // An error happened.
-    });
+    } else {
+      this.errorMessage = 'Пожалуйста, введите имя и фамилию';
+    }
   }
 
   navigateToGiftsList() {
     this.router.navigate(['/gifts']);
   }
+
+
 
 }

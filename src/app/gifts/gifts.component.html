@@ -37,12 +37,13 @@
           <label for="form32">Сколько вы готовы внести?</label>
         </div>
         <div *ngIf="amount.value && amount.valid && !paymentChosen" class="md-form mb-5" @ngIfAnimation>
-          <button mdbBtn type="button" color="primary" class="waves-light" mdbWavesEffect
+          <button *ngIf="!choiceConfirmed" mdbBtn type="button" color="primary" class="waves-light" mdbWavesEffect
                   (click)="confirmChoice(amount.value)">Подтвердить выбор
           </button>
+          <span class="remove-choice" *ngIf="choiceConfirmed" (click)="removeChoice()">Отменить выбор</span>
         </div>
         <div *ngIf="amount.value && amount.valid && !paymentChosen && choiceConfirmed" class="md-form mb-5" @ngIfAnimation>
-          <p class="h6 mb-4 accepted-text">Большое спасибо!</p><span (click)="removeChoice()">Отменить выбор</span>
+          <p class="h6 mb-4 accepted-text">Большое спасибо!</p>
           <p class="h5 mb-4">Хотите сделать перевод на папину карту прямо сейчас?</p>
           <button mdbBtn type="button" color="primary" class="waves-light" mdbWavesEffect
                   (click)="paymentChosen = PaymentType.CARD">Да

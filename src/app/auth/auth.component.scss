@@ -1,14 +1,39 @@
 .center-form {
   max-width: 400px;
-  margin: 0 auto;
+  margin: 0 15%;
+}
+.title {
+  margin-top: 25%;
 }
 .welcome-text {
   max-width: 800px;
   margin: 0 auto;
   font-family: 'AGBengaly', arial;
 }
+.btn-block {
+  margin: 0;
+}
 .create-password {
   margin-top: -1.5rem;
   font-size: 15px;
   color: dimgrey;
+}
+
+
+
+@media (max-aspect-ratio: 4/3) {
+  .center-form {
+    margin: 0 auto;
+  }
+  .title {
+    margin-top: 0;
+  }
+}
+@media (max-aspect-ratio: 3/4) {
+  .center-form {
+    margin: 0 auto;
+  }
+  .title {
+    margin-top: 100%;
+  }
 }

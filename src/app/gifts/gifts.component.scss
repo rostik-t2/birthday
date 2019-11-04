@@ -115,6 +115,11 @@
 .accepted-text {
   color: blue;
 }
+.remove-choice {
+  color: red;
+  border-bottom: red 1px dashed;
+  cursor: pointer;
+}
 .logout {
   margin: 8px;
   border-bottom: 1px dashed #000;
@@ -123,6 +128,13 @@
   float: right;
   margin-right: 30px;
   cursor: pointer;
+}
+
+@media (max-aspect-ratio: 4/3) {
+  .gift-wrap {
+    text-align: center;
+    width: 100%;
+  }
 }
 
 @media only screen and (max-width: 400px) {

@@ -44,7 +44,7 @@ export class GiftsComponent implements OnInit {
     , {
       id: 2,
       title: 'Автокресло',
-      image: '/assets/autokreslo.png',
+      image: '/assets/autokreslo2.png',
       price: 16000,
       amount: 0,
       description: '',
@@ -61,6 +61,16 @@ export class GiftsComponent implements OnInit {
       gif:  '/assets/please6.gif',
       hovered: false,
       acceptedText: 'Ой, вы знаете, я вообще не очень люблю ходить в поликлинику, но родители говорят, что это очень важно и так я всегда буду здоровой! А я хочу быть здоровой, правда-правда :)'
+    }    , {
+      id: 4,
+      title: 'Коляска',
+      image: '/assets/kolyaska.png',
+      price: 8300,
+      amount: 0,
+      description: '',
+      gif:  '/assets/please6.gif',
+      hovered: false,
+      acceptedText: 'Ура! Новая коляска для прогулок! Мне уже нравится :)'
     }
   ];
   public myDonation: number = 0;

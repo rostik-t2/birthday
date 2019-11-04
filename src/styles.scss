@@ -34,6 +34,13 @@ body {
   z-index: -1;
 }
 
+@media (max-aspect-ratio: 13/8) {
+  .main:after {
+    background: url('/assets/adelia-vert-half-half.jpg');
+    background-size: cover;
+  }
+}
+
 @media (max-aspect-ratio: 4/3) {
   .main:after {
     background: url('/assets/adelia-vert-half.jpg');
